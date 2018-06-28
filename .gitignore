@@ -1,0 +1,13 @@
+.DS_Store
+.idea
+*.pyc
+*.o
+*.exe
+*.swp
+*.orig
+*.retry
+env
+logs
+dump.rdb
+db.sqlite3
+node_modules/**

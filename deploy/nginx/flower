@@ -1,0 +1,17 @@
+# celery monitor, copy to /etc/nginx/sites-available/
+
+server {
+    listen 80;
+    server_name zhangtianyi.club;
+    # server_name 0.0.0.0;
+    charset utf-8;
+
+    location / {
+        proxy_pass http://localhost:5555;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}

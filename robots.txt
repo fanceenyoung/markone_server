@@ -1,0 +1,4 @@
+Crawl-delay: 60
+Disallow: /api/
+Disallow: /o/
+Disallow: /message/
