@@ -59,7 +59,7 @@ class UsersView(APIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def logout(self, request):
         logout(request)

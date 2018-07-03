@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, Group
+from app import base_models
 
 from utils import const
 
@@ -41,17 +42,54 @@ class BaseUserManager(UserManager):
 @python_2_unicode_compatible
 class User(AbstractBaseUser):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, default='')
+    nickname = models.CharField(max_length=64, default='')
     email = models.CharField(max_length=512, db_index=True, blank=True, default='')
     phone = models.CharField(max_length=32, db_index=True, blank=True, default='')
     type = models.CharField(max_length=16, choices=const.USER_TYPES, default=const.US_VISITOR)
     location = jsonfield.JSONField(blank=True)
     country = models.CharField(max_length=32, blank=True, default='China')
     avatar = models.CharField(max_length=256, blank=True, default='')
-    groups = models.ManyToManyField(Group)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
 
     objects = BaseUserManager()
 
+    def __str__(self):
+        return '{} {}'.format(self.uuid, self.name)
+
+
+@python_2_unicode_compatible
+class Notes(base_models.Object):
+    user = models.ForeignKey(User, related_name='notes')
+    title = models.CharField(max_length=128, default='')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    data = jsonfield.JSONField(blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return '{} {}'.format(self.uuid, self.title)
+
+
+@python_2_unicode_compatible
+class Section(base_models.Object):
+    user = models.ForeignKey(User)
+    notes = models.ForeignKey(Notes)
+    remark = models.TextField(blank=True)
+    origin = models.URLField(default='', null=True)
+    highlight = models.BooleanField(default=False)
+    trash = models.BooleanField(default=True)
+
+    is_video = models.BooleanField(default=False)
+    image = models.URLField(default='', null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    data = jsonfield.JSONField(blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return '{} {}'.format(self.uuid, self.origin)

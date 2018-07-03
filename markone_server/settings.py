@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'djcelery',
     'django_redis',
     'markone_server',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -105,7 +106,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    'DEFAULT_PAGINATION_CLASS': 'util.func.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'utils.func.PageNumberPagination',
     'PAGE_SIZE': int(get_local_env('PAGE_SIZE', 20)),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'EXCEPTION_HANDLER': 'utils.exceptions.custom_exception_handler',
