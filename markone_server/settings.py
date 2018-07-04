@@ -169,6 +169,18 @@ CACHES = {
     }
 }
 
+# 邮箱设置
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'Markonenote@163.com'
+EMAIL_HOST_PASSWORD = 'mayiji55'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# 验证码有效时间
+CODE_EXPIRY_TIME = 12 * 60 * 60
+CODE_SEND_INT = 60
+
 # CELERY SETTINGS
 djcelery.setup_loader()
 

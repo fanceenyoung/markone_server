@@ -71,7 +71,7 @@ class Notes(base_models.Object):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{} {}'.format(self.uuid, self.title)
+        return 'Notes:{} {}'.format(self.uuid, self.title)
 
 
 @python_2_unicode_compatible
@@ -92,4 +92,4 @@ class Section(base_models.Object):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{} {}'.format(self.uuid, self.origin)
+        return 'Section:{} {}'.format(self.uuid, self.origin)

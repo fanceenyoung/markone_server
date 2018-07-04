@@ -15,7 +15,7 @@ def validate_and_save(serializer, **kws):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ('groups', 'country')
+        exclude = ('country', 'updated_at', )
         extra_kwargs = {
             'password': {'required': False, 'write_only': True},
             'avatar': {'required': False},

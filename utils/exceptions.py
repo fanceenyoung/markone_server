@@ -23,10 +23,24 @@ class ErrorFactory(type):
 
 class BasicException(APIException):
     __metaclass__ = ErrorFactory
-
     status_code = 400
-
     _children = []
+
+
+class UnsentCode(BasicException):
+    default_detail = 'Send code first.'
+
+
+class WrongCode(BasicException):
+    default_detail = 'Code verify failed.'
+
+
+class WrongAuth(BasicException):
+    default_detail = 'Verify you {username_field} first.'
+
+    def __init__(self, username_field='auth'):
+        self.default_detail = WrongAuth.default_detail.format(username_field=username_field)
+        super(WrongAuth, self).__init__()
 
 
 class InvalidUUID(BasicException):

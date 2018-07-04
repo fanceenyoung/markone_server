@@ -5,21 +5,43 @@ from django.db import transaction
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
+from rest_framework import mixins
 
 
-from shaw.exception import SHException
-from shaw.schema import check_body_keys, validate_value, check_params_keys
-from user.serializers import UserSerializer, validate_and_save
-from utils.func import phone_parse
+from shaw.schema import check_body_keys, check_params_keys
+from user.serializers import UserSerializer
+from app.models import User
+from utils import const
+from user.vertify_backend import VerifyEmail
 
 
 LOG = logging.getLogger(__name__)
+
+
+@api_view(['POST'])
+def user_login(request):
+    user = authenticate(request, **request.data)
+    if user:
+        login(request, user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])
+def check_user(request):
+    params = request.query_params
+    check_params_keys(params, ['email', 'phone'], exclusion=True)
+    result = False
+    for field in ('phone', 'email'):
+        if params.get(field):
+            result |= User.objects.filter(**{field: params[field]}).exists()
+    return Response({'result': result})
 
 
 @api_view(['PUT'])
@@ -28,37 +50,19 @@ def forget_password(request):
     data = request.data
     check_body_keys(data, ['password'])
     password = data['password']
-    phone = data.get('phone')
-    # if phone and VerifyPhone.check(request.session, phone):
-    #     auth.backend.change_password(phone, password)
-    # email = data.get('email')
-    # if email and VerifyEmail.check(request.session, email):
-    #     auth.backend.change_password(email, password)
+    email = data.get('email')
+    if email and VerifyEmail.check(request.session, email):
+        user = User.objects.filter(email=email).first()
+        if user:
+            user.set_password(password)
+            user.save()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UsersView(APIView):
-
-    @transaction.atomic
-    def post(self, request):
-        data = request.data
-        LOG.info('Create user request. | {}'.format(data))
-
-        check_body_keys(data, ['password'])
-        email = data.get('email')
-        if not email:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        s = UserSerializer(data=data)
-        user = validate_and_save(s)
-        user.save()
-
-        user = authenticate(request, **data)
-        login(request, user)
-        return Response(s.data, status=status.HTTP_201_CREATED)
-
-
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(mixins.CreateModelMixin,
+                  viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     # permission_classes = (IsAuthenticated,)
 
     def logout(self, request):
@@ -67,7 +71,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_profile(self, request):
         user = request.user
-        result = UserSerializer(instance=user)
+        # user = User.objects.first()
+        result = UserSerializer(instance=user).data
         user.last_login = timezone.now()
         user.save()
         return Response(result, status=status.HTTP_200_OK)
@@ -86,8 +91,8 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return self.set_profile(request)
 
-    @detail_route(methods=['put'], url_path='reset-password')
-    def set_password(self, request):
+    @detail_route(methods=['put'], url_path='reset_password')
+    def reset_password(self, request):
         data = request.data
         user = request.user
         check_body_keys(data, ['old_password', 'new_password'])
@@ -96,41 +101,12 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @detail_route(methods=['put'], url_path='change-phone')
-    @transaction.atomic
-    def set_phone(self, request):
-        user = request.user
-        data = request.data
-        check_body_keys(data, ['phone'])
-        # VerifyPhone.check(request.session, data['phone'])
-        # if phone_parse(user.phone):
-        #     VerifyPhone.check(request.session, user.phone)
-        s = UserSerializer(user, data={'phone': data['phone']}, partial=True)
-        validate_and_save(s)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @detail_route(methods=['put'], url_path='change-email')
-    @transaction.atomic
-    def set_email(self, request):
-        user = request.user
-        data = request.data
-        check_body_keys(data, ['email'])
-        # VerifyEmail.check(request.session, data['email'])
-        # if user.email:
-        #     VerifyEmail.check(request.session, user.email)
-        s = UserSerializer(user, data={'email': data['email']}, partial=True)
-        validate_and_save(s)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def update_relation(self, request):
-        user = request.user
-        data = request.data
-        check_body_keys(data, ['type', 'uuid'])
-        type = data['type']
-        # validate_value(type, const.REL_USER_ACTIONS)
-        # if type == const.REL_USER_FOLLOW:
-        #     relation.follow_user(user, data['uuid'])
-        # if type == const.REL_USER_UN_FOLLOW:
-        #     relation.unfollow_user(user, data['uuid'])
-        result = {'message': '关注成功'}
+    def help_center(self, request):
+        result = {
+            'questions': const.QUESTIONS,
+            'feedback_image': const.FEEDBACK_IMAGE,
+            'contact': const.FEEDBACK_CONTACT,
+            'members': const.ABOUT_US_MEBS,
+            'about_us': const.ABOUT_US_DESC,
+        }
         return Response(result, status=status.HTTP_200_OK)
