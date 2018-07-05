@@ -14,7 +14,7 @@ data = {
     'email': email,
     'password': password,
 }
-post_url='http://127.0.0.1:8000/api/users/'
+post_url='http://18.191.203.74:11112/api/users/'
 resp=requests.post(post_url, json=data)
 
 
