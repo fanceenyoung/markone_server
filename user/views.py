@@ -63,7 +63,6 @@ class UserViewSet(mixins.CreateModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # permission_classes = (IsAuthenticated,)
 
     def logout(self, request):
         logout(request)
@@ -84,14 +83,14 @@ class UserViewSet(mixins.CreateModelMixin,
         u_serializer.save()
         return Response(u_serializer.data, status=status.HTTP_200_OK)
 
-    @detail_route(methods=['get', 'put'])
+    @detail_route(methods=['get', 'put'], permission_classes=[IsAuthenticated])
     def profile(self, request):
         if request.method == 'GET':
             return self.get_profile(request)
         else:
             return self.set_profile(request)
 
-    @detail_route(methods=['put'], url_path='reset_password')
+    @detail_route(methods=['put'], url_path='reset_password', permission_classes=[IsAuthenticated])
     def reset_password(self, request):
         data = request.data
         user = request.user

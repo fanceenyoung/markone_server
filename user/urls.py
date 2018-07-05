@@ -8,8 +8,8 @@ from user.vertify_backend import VerifyViewSet
 
 self_router = SelfRouter()
 router = SimpleRouter()
-router.register('auth', VerifyViewSet, base_name='auth')
-self_router.register(r'', UserViewSet, base_name='users')
+router.register('auth_verify', VerifyViewSet, base_name='auth_verify')
+self_router.register('', UserViewSet, base_name='users')
 
 urlpatterns = [
     url(r'^login/?$', user_login, name='login'),

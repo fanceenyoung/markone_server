@@ -39,7 +39,10 @@ class UserSerializer(serializers.ModelSerializer):
         country = validated_data.get('location', {}).get('country')
         if country:
             validated_data['country'] = country
-        return User.objects.create_user(**validated_data)
+        email = validated_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            return User.objects.create_user(**validated_data)
+        return User.objects.filter(email=email).first()
 
     @transaction.atomic
     def update(self, user, validated_data):

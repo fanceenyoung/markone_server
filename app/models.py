@@ -64,6 +64,7 @@ class User(AbstractBaseUser):
 class Notes(base_models.Object):
     user = models.ForeignKey(User, related_name='notes')
     title = models.CharField(max_length=128, default='')
+    origin = models.URLField(default='')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -75,16 +76,16 @@ class Notes(base_models.Object):
 
 
 @python_2_unicode_compatible
-class Section(base_models.Object):
+class Sections(base_models.Object):
     user = models.ForeignKey(User)
-    notes = models.ForeignKey(Notes)
+    notes = models.ForeignKey(Notes, related_name='sections')
     remark = models.TextField(blank=True)
-    origin = models.URLField(default='', null=True)
+    origin = models.URLField(default='')
     highlight = models.BooleanField(default=False)
-    trash = models.BooleanField(default=True)
+    trash = models.BooleanField(default=False)
 
     is_video = models.BooleanField(default=False)
-    image = models.URLField(default='', null=True)
+    image = models.URLField(default='')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -92,4 +93,4 @@ class Section(base_models.Object):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return 'Section:{} {}'.format(self.uuid, self.origin)
+        return 'Sections:{} {}'.format(self.uuid, self.origin)
