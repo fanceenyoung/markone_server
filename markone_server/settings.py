@@ -23,7 +23,7 @@ DEBUG = get_local_env('DJANGO_DEBUG') == 'True'
 TEST = DEBUG and get_local_env('TEST') == 'True'
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
