@@ -14,12 +14,14 @@ data = {
     'email': email,
     'password': password,
 }
-post_url='http://18.191.203.74:11112/api/users/'
+# post_url='http://18.191.203.74:11112/api/users/'
+post_url='http://127.0.0.1:11112/api/users/'
 resp=requests.post(post_url, json=data)
 
 
 from app.models import *
-user=User.objects.last()
+user=User.objects.first()
+note = Notes.objects.first()
 note=Notes.objects.create(user=user, title='user2 notes', origin='http://www.google.com')
 
 section1=Sections.objects.create(notes=note, user=user, remark='user2 section1')

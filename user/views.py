@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
+import random
+import string
 
 from django.db import transaction
 from django.utils import timezone
@@ -18,9 +20,14 @@ from user.serializers import UserSerializer
 from app.models import User
 from utils import const
 from user.vertify_backend import VerifyEmail
+from user.celery_tasks import sync_reset_password_task
 
 
 LOG = logging.getLogger(__name__)
+
+
+def generate_random_password():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 
 
 @api_view(['POST'])
@@ -48,14 +55,20 @@ def check_user(request):
 @transaction.atomic
 def forget_password(request):
     data = request.data
-    check_body_keys(data, ['password'])
-    password = data['password']
+    check_body_keys(data, ['email'])
     email = data.get('email')
     if email and VerifyEmail.check(request.session, email):
         user = User.objects.filter(email=email).first()
         if user:
+            password = generate_random_password()
             user.set_password(password)
             user.save()
+            post_data = {
+                'password': password,
+                'email': email,
+            }
+            sync_reset_password_task.delay(**post_data)
+
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 

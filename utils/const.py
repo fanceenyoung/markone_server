@@ -13,8 +13,12 @@ USER_TYPES = (
 )
 
 # 发送code的邮件头和内容
-EMAIL_CODE_SUBJECT = 'code info from Markone'
-EMAIL_CODE_CONTENT = 'code of this request is:'
+EMAIL_CODE_SUBJECT = 'Code info from Markone'
+EMAIL_CODE_CONTENT = 'Code of this request is:'
+
+# 发送重置密码邮件头火热内容
+EMAIL_PASSWORD_SUBJECT = 'Reset your password request'
+EMAIL_PASSWORD_CONTENT = 'Your new password is:'
 
 
 # 账号中心-questions

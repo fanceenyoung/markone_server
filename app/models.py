@@ -64,7 +64,7 @@ class User(AbstractBaseUser):
 class Notes(base_models.Object):
     user = models.ForeignKey(User, related_name='notes')
     title = models.CharField(max_length=128, default='')
-    origin = models.URLField(default='')
+    origin = models.CharField(max_length=256, default='')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -80,12 +80,12 @@ class Sections(base_models.Object):
     user = models.ForeignKey(User)
     notes = models.ForeignKey(Notes, related_name='sections')
     remark = models.TextField(blank=True)
-    origin = models.URLField(default='')
+    origin = models.CharField(max_length=256, default='', blank=True)
     highlight = models.BooleanField(default=False)
     trash = models.BooleanField(default=False)
 
     is_video = models.BooleanField(default=False)
-    image = models.URLField(default='')
+    image = models.CharField(max_length=256, default='', blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

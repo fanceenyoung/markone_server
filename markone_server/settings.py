@@ -195,7 +195,7 @@ BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 31104000}
 CELERY_DEFAULT_QUEUE = 'default'
 CELERY_DEFAULT_EXCHANGE_TYPE = 'topic'
 CELERY_DEFAULT_ROUTING_KEY = 'default'
-CELERY_IMPORTS = ('api.celery_tasks',)
+CELERY_IMPORTS = ('user.celery_tasks',)
 CELERYBEAT_SCHEDULE = {
 }
 
