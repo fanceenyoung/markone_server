@@ -173,8 +173,10 @@ CACHES = {
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'Markonenote@163.com'
-EMAIL_HOST_PASSWORD = 'mayiji55'
+# EMAIL_HOST_USER = 'Markonenote@163.com'
+# EMAIL_HOST_PASSWORD = 'mayiji55'
+EMAIL_HOST_USER = 'zhangtianyiww@163.com'
+EMAIL_HOST_PASSWORD = '163mail'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # 验证码有效时间

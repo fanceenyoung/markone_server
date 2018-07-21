@@ -57,6 +57,13 @@ def forget_password(request):
     data = request.data
     check_body_keys(data, ['email'])
     email = data.get('email')
+    if not email or not VerifyEmail.check(request.session, email):
+        error_msg = {
+            'success': False,
+            'msg': 'Invalid email address!',
+        }
+        return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+
     if email and VerifyEmail.check(request.session, email):
         user = User.objects.filter(email=email).first()
         if user:
@@ -68,8 +75,12 @@ def forget_password(request):
                 'email': email,
             }
             sync_reset_password_task.delay(**post_data)
-
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    msg_str = 'Reset password to email:[{}] succeeded!'.format(email)
+    result = {
+        'success': True,
+        'msg': msg_str,
+    }
+    return Response(result, status=status.HTTP_200_OK)
 
 
 class UserViewSet(mixins.CreateModelMixin,

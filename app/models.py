@@ -2,6 +2,7 @@
 import uuid
 import jsonfield
 import logging
+import random
 
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
@@ -12,6 +13,11 @@ from app import base_models
 from utils import const
 
 LOG = logging.getLogger(__name__)
+
+
+def generate_random_avatar():
+    ava_list = const.USER_AVATARS
+    return random.choice(ava_list)
 
 
 class BaseUserManager(UserManager):
@@ -49,7 +55,7 @@ class User(AbstractBaseUser):
     type = models.CharField(max_length=16, choices=const.USER_TYPES, default=const.US_VISITOR)
     location = jsonfield.JSONField(blank=True)
     country = models.CharField(max_length=32, blank=True, default='China')
-    avatar = models.CharField(max_length=256, blank=True, default='')
+    avatar = models.CharField(max_length=256, blank=True, default=generate_random_avatar())
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)

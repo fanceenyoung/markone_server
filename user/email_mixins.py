@@ -23,14 +23,14 @@ def base_email_send(email, subject, content):
 def send_email_code(email, code=None):
     code = code if code else str(random.randint(100000, 999999))
     subject = const.EMAIL_CODE_SUBJECT
-    expire_str = 'this code will expires in {} hours'.format(settings.CODE_EXPIRY_TIME/3600)
+    expire_str = ', this code will expires in {} hours'.format(settings.CODE_EXPIRY_TIME/3600)
     content = const.EMAIL_CODE_CONTENT + code + expire_str
     base_email_send(email=email, subject=subject, content=content)
 
 
 def send_email_change_password(email, password):
     subject = const.EMAIL_PASSWORD_SUBJECT
-    expire_str = 'this code will expires in {} hours'.format(settings.CODE_EXPIRY_TIME/3600)
+    expire_str = ', this code will expires in {} hours'.format(settings.CODE_EXPIRY_TIME/3600)
     content = const.EMAIL_PASSWORD_CONTENT + password + expire_str
     base_email_send(email=email, subject=subject, content=content)
 

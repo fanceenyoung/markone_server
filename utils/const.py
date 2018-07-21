@@ -12,6 +12,16 @@ USER_TYPES = (
     (US_OTHER, 'Other'),
 )
 
+# avatars
+USER_AVATARS = [
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/icon_small.png',
+    'https://img.shields.io/badge/download-_crx-brightgreen.svg',
+    'https://img.shields.io/badge/download-_chrome_webstore-brightgreen.svg',
+    'https://img.shields.io/badge/download-_crx-brightgreen.svg',
+    'https://img.shields.io/badge/lastest_version-1.1.1-blue.svg',
+    'https://img.shields.io/badge/website-_simpread.ksria.com-1DBA90.svg'
+]
+
 # 发送code的邮件头和内容
 EMAIL_CODE_SUBJECT = 'Code info from Markone'
 EMAIL_CODE_CONTENT = 'Code of this request is:'
@@ -104,3 +114,4 @@ ABOUT_US_MEBS = [
         'image': 'http://www.baidu.com'
     }
 ]
+
