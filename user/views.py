@@ -14,13 +14,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from rest_framework import mixins
 
-
 from shaw.schema import check_body_keys, check_params_keys
 from user.serializers import UserSerializer
 from app.models import User
 from utils import const
-from user.vertify_backend import VerifyEmail
-from user.celery_tasks import sync_reset_password_task
+# from user.celery_tasks import sync_reset_password_task
+from user.email_mixins import send_email_change_password
 
 
 LOG = logging.getLogger(__name__)
@@ -56,26 +55,25 @@ def check_user(request):
 @transaction.atomic
 def forget_password(request):
     data = request.data
-    check_body_keys(data, ['email'])
     email = data.get('email')
-    if not email or not VerifyEmail.check(request.session, email):
+    if not email or not User.objects.filter(email=email).exists():
         error_msg = {
             'success': False,
             'msg': 'Invalid email address!',
         }
         return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
-    if email and VerifyEmail.check(request.session, email):
-        user = User.objects.filter(email=email).first()
-        if user:
-            password = generate_random_password()
-            user.set_password(password)
-            user.save()
-            post_data = {
-                'password': password,
-                'email': email,
-            }
-            sync_reset_password_task.delay(**post_data)
+    user = User.objects.filter(email=email).first()
+    if user:
+        password = generate_random_password()
+        user.set_password(password)
+        user.save()
+        post_data = {
+            'password': password,
+            'email': email,
+        }
+        send_email_change_password(email=email, password=password)
+        # sync_reset_password_task.delay(**post_data)
     msg_str = 'Reset password to email:[{}] succeeded!'.format(email)
     result = {
         'success': True,

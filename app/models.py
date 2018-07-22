@@ -74,8 +74,6 @@ class Notes(base_models.Object):
     title = models.CharField(max_length=128, default='')
     origin = models.CharField(max_length=256, default='')
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     data = jsonfield.JSONField(blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -96,8 +94,10 @@ class Sections(base_models.Object):
     is_video = models.BooleanField(default=False)
     image = models.CharField(max_length=256, default='', blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    start_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    end_time = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    link = models.CharField(max_length=1024, default='', blank=True)
+
     data = jsonfield.JSONField(blank=True)
     is_active = models.BooleanField(default=True)
 

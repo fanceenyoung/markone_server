@@ -6,7 +6,8 @@ from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 
 from app.models import Notes, Sections, User
-from app.serializers import NotesSerializer, SectionsSerializer
+from app.serializers import (NotesSerializer, SectionsSerializer,
+                             NotesHightlightSerializer, NotesTrashSerializer)
 
 
 class NotesViewSet(viewsets.ModelViewSet):
@@ -28,12 +29,26 @@ class NotesViewSet(viewsets.ModelViewSet):
         Sections.objects.filter(notes=instance).update(is_active=False)
         instance.save()
 
+    @list_route(methods=['get'])
+    def highlight(self, request):
+        query = self.queryset.filter(sections__highlight=True).distinct().order_by('-updated_at')
+        self.serializer_class = NotesHightlightSerializer
+        self.queryset = query
+        return super(NotesViewSet, self).list(request)
+
+    @list_route(methods=['get'])
+    def trash(self, request):
+        query = self.queryset.filter(sections__trash=True).distinct().order_by('-updated_at')
+        self.serializer_class = NotesTrashSerializer
+        self.queryset = query
+        return super(NotesViewSet, self).list(request)
+
 
 class SectionsViewSet(viewsets.ModelViewSet):
     queryset = Sections.objects.filter(is_active=True).order_by('-highlight', '-updated_at')
     serializer_class = SectionsSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('remark',)
+    search_fields = ('remark', 'link', 'origin', )
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
@@ -51,15 +66,3 @@ class SectionsViewSet(viewsets.ModelViewSet):
         note_obj = instance.notes
         note_obj.update_at = datetime.datetime.now()
         note_obj.save()
-
-    @list_route(methods=['get'])
-    def highlight(self, request):
-        query = self.queryset.filter(highlight=True).order_by('-updated_at')
-        self.queryset = query
-        return super(SectionsViewSet, self).list(request)
-
-    @list_route(methods=['get'])
-    def trash(self, request):
-        query = self.queryset.filter(trash=True).order_by('-updated_at')
-        self.queryset = query
-        return super(SectionsViewSet, self).list(request)
