@@ -2,7 +2,7 @@
 from django.conf.urls import url, include
 
 from utils.func import SelfRouter, SimpleRouter
-from user.views import UserViewSet, forget_password, user_login, check_user
+from user.views import UserViewSet, forget_password, user_login, check_user, LogoutView
 from user.vertify_backend import VerifyViewSet
 
 
@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^check_user/?$', check_user, name='check_user'),
     url(r'^forget_password/?$', forget_password, name='forget_password'),
 
-    url(r'^logout/?$', UserViewSet.as_view({'put': 'logout'}), name='logout'),
+    url(r'^logout/?$', LogoutView.as_view(), name='logout'),
     url(r'^reset_password/?$', UserViewSet.as_view({'put': 'reset_password'})),
     url(r'^help_center/?$', UserViewSet.as_view({'get': 'help_center'})),
     url(r'^', include(self_router.urls)),

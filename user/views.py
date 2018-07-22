@@ -18,6 +18,7 @@ from shaw.schema import check_body_keys, check_params_keys
 from user.serializers import UserSerializer
 from app.models import User
 from utils import const
+from rest_framework import views
 # from user.celery_tasks import sync_reset_password_task
 from user.email_mixins import send_email_change_password
 
@@ -82,14 +83,18 @@ def forget_password(request):
     return Response(result, status=status.HTTP_200_OK)
 
 
+class LogoutView(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class UserViewSet(mixins.CreateModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-    def logout(self, request):
-        logout(request)
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_profile(self, request):
         user = request.user
