@@ -16,11 +16,11 @@ class NotesViewSet(viewsets.ModelViewSet):
     filter_fields = ('is_active', )
 
     search_fields = ('title', 'sections__remark')
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        # user = self.request.user
-        user = User.objects.first()
+        user = self.request.user
+        # user = User.objects.first()
         return self.queryset.filter(user=user)
 
     def perform_destroy(self, instance):
@@ -34,11 +34,11 @@ class SectionsViewSet(viewsets.ModelViewSet):
     serializer_class = SectionsSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ('remark',)
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        # user = self.request.user
-        user = User.objects.first()
+        user = self.request.user
+        # user = User.objects.first()
         query = self.queryset.filter(user=user)
         return query
 
