@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'mako',
     'djangomako',
     'rest_framework',
+    'rest_framework.authtoken',
     'djcelery',
     'django_redis',
     'markone_server',
@@ -59,7 +60,7 @@ ROOT_URLCONF = 'markone_server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR + '/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -97,9 +98,11 @@ DATABASES = {
 }
 API_VERSION = 'v1'
 
+AUTH_USER_MODEL = 'app.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PARSER_CLASSES': (
@@ -113,6 +116,11 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_VERSION': 'v1',
 }
+
+AUTHENTICATION_BACKENDS = [
+    'user.backends.MarkOneAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

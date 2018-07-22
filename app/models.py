@@ -48,8 +48,8 @@ class BaseUserManager(UserManager):
 @python_2_unicode_compatible
 class User(AbstractBaseUser):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=64, default='')
-    nickname = models.CharField(max_length=64, default='')
+    name = models.CharField(max_length=128, default='')
+    nickname = models.CharField(max_length=128, default='')
     email = models.CharField(max_length=512, db_index=True, blank=True, default='')
     phone = models.CharField(max_length=32, db_index=True, blank=True, default='')
     type = models.CharField(max_length=16, choices=const.USER_TYPES, default=const.US_VISITOR)
@@ -60,6 +60,8 @@ class User(AbstractBaseUser):
     updated_at = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
 
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     objects = BaseUserManager()
 
     def __str__(self):
@@ -85,6 +87,7 @@ class Notes(base_models.Object):
 class Sections(base_models.Object):
     user = models.ForeignKey(User)
     notes = models.ForeignKey(Notes, related_name='sections')
+    position = models.PositiveIntegerField(default=0)
     remark = models.TextField(blank=True)
     origin = models.CharField(max_length=256, default='', blank=True)
     highlight = models.BooleanField(default=False)

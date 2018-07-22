@@ -11,7 +11,8 @@ class SectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sections
         fields = ('uuid', 'remark', 'origin', 'highlight', 'trash',
-                  'is_video', 'image', 'updated_at', 'notes_id', 'notes_title',)
+                  'is_video', 'image', 'updated_at', 'notes_id', 'notes_title',
+                  'position')
 
 
 class NotesSerializer(serializers.ModelSerializer):

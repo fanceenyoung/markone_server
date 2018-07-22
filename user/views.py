@@ -35,7 +35,8 @@ def user_login(request):
     user = authenticate(request, **request.data)
     if user:
         login(request, user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        result = UserSerializer(instance=user).data
+        return Response(result, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -109,6 +110,7 @@ class UserViewSet(mixins.CreateModelMixin,
 
     @detail_route(methods=['get', 'put'], permission_classes=[IsAuthenticated])
     def profile(self, request):
+
         if request.method == 'GET':
             return self.get_profile(request)
         else:
