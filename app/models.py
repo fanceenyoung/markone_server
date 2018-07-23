@@ -8,8 +8,10 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, Group
-from app import base_models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+from app import base_models
 from utils import const
 
 LOG = logging.getLogger(__name__)
@@ -103,3 +105,17 @@ class Sections(base_models.Object):
 
     def __str__(self):
         return 'Sections:{} {}'.format(self.uuid, self.origin)
+
+
+@receiver(post_save, sender=User)
+def meta_add_user_default_section(sender, **kwargs):
+    if kwargs.get('created'):
+        user = kwargs.get('instance')
+        if not Notes.objects.filter(user=user, title=const.DEFAULT_NOTES_TITLE).exists():
+            note = Notes.objects.create(user=user, title=const.DEFAULT_NOTES_TITLE, origin=const.DEFAULT_SITE)
+            for each in const.DEFAULT_SECTION_LIST:
+                if 'https://' not in each:
+                    se_dict = {'user': user, 'notes': note, 'remark': each, 'origin': const.DEFAULT_SITE}
+                else:
+                    se_dict = {'user': user, 'notes': note, 'remark': '', 'origin': const.DEFAULT_SITE, 'is_video': True, 'image': each}
+                Sections.objects.create(**se_dict)

@@ -14,19 +14,19 @@ USER_TYPES = (
 
 # avatars
 USER_AVATARS = [
-    'https://audionetwork.oss-cn-beijing.aliyuncs.com/icon_small.png',
-    'https://img.shields.io/badge/download-_crx-brightgreen.svg',
-    'https://img.shields.io/badge/download-_chrome_webstore-brightgreen.svg',
-    'https://img.shields.io/badge/download-_crx-brightgreen.svg',
-    'https://img.shields.io/badge/lastest_version-1.1.1-blue.svg',
-    'https://img.shields.io/badge/website-_simpread.ksria.com-1DBA90.svg'
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/avatar_01.png',
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/avatar_02.png',
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/avatar_03.png',
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/avatar_04.png',
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/avatar_05.png',
+    'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/avatar_06.png',
 ]
 
 # 发送code的邮件头和内容
 EMAIL_CODE_SUBJECT = 'Code info from Markone'
 EMAIL_CODE_CONTENT = 'Code of this request is:'
 
-# 发送重置密码邮件头火热内容
+# 发送重置密码邮件头和内容
 EMAIL_PASSWORD_SUBJECT = 'Reset your password request'
 EMAIL_PASSWORD_CONTENT = 'Your new password is:'
 
@@ -114,4 +114,19 @@ ABOUT_US_MEBS = [
         'image': 'http://www.baidu.com'
     }
 ]
+
+# 默认notes
+DEFAULT_NOTES_TITLE = 'Markone新手引导'
+DEFAULT_SITE = 'http://www.markonenote.com'
+
+# 默认sections
+
+SECTION_ONE = 'Welcome to Mark One! We are building this tool to help you record information more efficiently while watching online videos. With Mark One, you can record subtitles, capture screenshots and input your insights without leaving the web page. And all of these will automatically appear here, in the notes page.'
+SECTION_TWO = '歡迎來到馬一記！我們想通過這個工具來幫助您提升在觀看在線視頻時的效率。在馬一記Chrome擴展程序中，您可以記錄字幕、截圖、輸入筆記，而所有的這些內容，均可通過點擊頭像進入筆記頁面查看和導出。'
+SECTION_THERE = 'https://audionetwork.oss-cn-beijing.aliyuncs.com/markone/section_deault3.png'
+SECTION_FOUR = 'If you haven’t installed our Chrome extension, please click here, or search for “Mark One” in the Chrome Web Store. If you have any problems or suggestions when using our extension, please contact us through markone_support@163.com, Facebook or Twitter @Mark One馬一記.'
+SECTION_FIVE = '如果您還沒有安裝拓展程序，請點擊這裡，或者在Chrome應用商店搜索“Mark One”。如果中國大陸的用戶在安装中遇到问题，請在幫助中心查看如何科學安裝，也歡迎微博微信搜索“Mark One馬一記”關注我們，了解科學學習方法，獲取更多新奇學習資料。'
+SECTION_SIX = 'Let us begin your new learning journey!'
+
+DEFAULT_SECTION_LIST = [SECTION_SIX, SECTION_FIVE, SECTION_FOUR, SECTION_THERE, SECTION_TWO, SECTION_ONE]
 

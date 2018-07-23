@@ -44,3 +44,18 @@ post_url='http://127.0.0.1:8000/api/sections'
 resp=requests.post(post_url, json=data)
 
 """
+
+"""
+from utils import const
+from app.models import *
+
+user=User.objects.first()
+note = Notes.objects.create(user=user, title=const.DEFAULT_NOTES_TITLE, origin=const.DEFAULT_SITE)
+for each in const.DEFAULT_SECTION_LIST:
+    if 'https://' not in each:
+        se_dict = {'user': user, 'notes': note, 'remark': each, 'origin': const.DEFAULT_SITE}
+    else:
+        se_dict = {'user': user, 'notes': note, 'remark': '', 'origin': const.DEFAULT_SITE, 'is_video': True, 'image': each}
+    Sections.objects.create(**se_dict)
+
+"""
