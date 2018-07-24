@@ -4,8 +4,10 @@ from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
-from app.models import Notes, Sections, User
+from app.models import Notes, Sections
 from app.serializers import (NotesSerializer, SectionsSerializer,
                              NotesHightlightSerializer, NotesTrashSerializer)
 
@@ -28,6 +30,16 @@ class NotesViewSet(viewsets.ModelViewSet):
         instance.is_active = False
         Sections.objects.filter(notes=instance).update(is_active=False)
         instance.save()
+
+    @list_route(methods=['get'])
+    def check_notes(self, request):
+        params = request.query_params
+        origin = params.get('origin')
+        if not origin or origin is None:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        note_obj = Notes.objects.filter(origin__contains=origin, user=request.user).first()
+        result = NotesSerializer(instance=note_obj).data if note_obj else {}
+        return Response(result, status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
     def highlight(self, request):

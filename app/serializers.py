@@ -35,7 +35,7 @@ class NotesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notes
-        fields = ('uuid', 'title', 'origin', 'updated_at', 'sections',)
+        fields = ('uuid', 'user', 'title', 'origin', 'updated_at', 'sections',)
 
 
 class NotesHightlightSerializer(serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class NotesHightlightSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notes
-        fields = ('uuid', 'title', 'origin', 'updated_at', 'sections',)
+        fields = ('uuid', 'user', 'title', 'origin', 'updated_at', 'sections',)
 
 
 class NotesTrashSerializer(serializers.ModelSerializer):
@@ -59,4 +59,4 @@ class NotesTrashSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notes
-        fields = ('uuid', 'title', 'origin', 'updated_at', 'sections',)
+        fields = ('uuid', 'user', 'title', 'origin', 'updated_at', 'sections',)
