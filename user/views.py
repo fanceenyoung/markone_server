@@ -10,9 +10,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view
 from rest_framework import mixins
+from django.views.decorators.csrf import csrf_exempt
 
 from shaw.schema import check_body_keys, check_params_keys
 from user.serializers import UserSerializer
@@ -31,6 +32,7 @@ def generate_random_password():
 
 
 @api_view(['POST'])
+@csrf_exempt
 def user_login(request):
     user = authenticate(request, **request.data)
     if user:
@@ -38,7 +40,8 @@ def user_login(request):
         result = UserSerializer(instance=user).data
         return Response(result, status=status.HTTP_200_OK)
     else:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        result = {'success': False, 'msg': 'Email or password error'}
+        return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -54,6 +57,7 @@ def check_user(request):
 
 @api_view(['PUT'])
 @transaction.atomic
+@csrf_exempt
 def forget_password(request):
     data = request.data
     email = data.get('email')
@@ -84,9 +88,9 @@ def forget_password(request):
 
 
 class LogoutView(views.APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
