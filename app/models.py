@@ -80,7 +80,7 @@ class Notes(base_models.Object):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return 'Notes:{} {}'.format(self.uuid, self.title)
+        return 'Notes:{}'.format(self.uuid)
 
 
 @python_2_unicode_compatible
@@ -104,7 +104,7 @@ class Sections(base_models.Object):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return 'Sections:{} {}'.format(self.uuid, self.origin)
+        return 'Sections:{}'.format(self.uuid)
 
 
 @receiver(post_save, sender=User)

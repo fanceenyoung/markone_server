@@ -116,8 +116,8 @@ ABOUT_US_MEBS = [
 ]
 
 # 默认notes
-DEFAULT_NOTES_TITLE = 'Markone新手引导'
-DEFAULT_SITE = 'http://www.markonemark.com/'
+DEFAULT_NOTES_TITLE = 'Markone user guide'
+DEFAULT_SITE = 'http://www.markonenote.com/'
 
 # 默认sections
 

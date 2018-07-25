@@ -23,7 +23,6 @@ class NotesViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        # user = User.objects.first()
         return self.queryset.filter(user=user)
 
     def perform_destroy(self, instance):
@@ -37,7 +36,7 @@ class NotesViewSet(viewsets.ModelViewSet):
         origin = params.get('origin')
         if not origin or origin is None:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
-        note_obj = Notes.objects.filter(origin__contains=origin, user=request.user).first()
+        note_obj = Notes.objects.filter(origin=origin, user=request.user).first()
         result = NotesSerializer(instance=note_obj).data if note_obj else {}
         return Response(result, status=status.HTTP_200_OK)
 
@@ -65,7 +64,6 @@ class SectionsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        # user = User.objects.first()
         query = self.queryset.filter(user=user)
         return query
 
