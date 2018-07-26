@@ -24,7 +24,8 @@ class SimpleSectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sections
         fields = ('uuid', 'remark', 'origin', 'highlight', 'trash',
-                  'is_video', 'image', 'updated_at', 'position',)
+                  'is_video', 'image', 'updated_at', 'position',
+                  'start_time', 'end_time', 'link',)
 
 
 class NotesSerializer(serializers.ModelSerializer):
