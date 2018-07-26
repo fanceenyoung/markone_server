@@ -6,7 +6,7 @@ upstream django_server{
 
 server {
   listen 80;
-  server_name markonemark.com;
+  server_name markonenote.com;
   # server_name 0.0.0.0;
 
   client_max_body_size 20M;

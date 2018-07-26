@@ -2,7 +2,7 @@
 
 server {
     listen 80;
-    server_name markonemark.com;
+    server_name markonenote.com;
     # server_name 0.0.0.0;
     charset utf-8;
 

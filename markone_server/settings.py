@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import djcelery
-
 
 def get_local_env(name, default=None):
     import envs
@@ -39,7 +37,6 @@ INSTALLED_APPS = [
     'djangomako',
     'rest_framework',
     'rest_framework.authtoken',
-    'djcelery',
     'django_redis',
     'markone_server',
     'app',
@@ -196,22 +193,14 @@ CODE_EXPIRY_TIME = 12 * 60 * 60
 CODE_SEND_INT = 60
 
 # CELERY SETTINGS
-djcelery.setup_loader()
-
-CELERY_TIMEZONE = 'Asia/Shanghai'
-
-BROKER_URL = REDIS_HOST + "8"
-CELERY_ACCEPT_CONTENT = ['json']
+CELERY_BROKER_URL = REDIS_HOST + "8"
+CELERY_RESULT_BACKEND = REDIS_HOST + "8"
+CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 31104000}
+CELERY_TIMEZONE = 'Asia/Shanghai'
 
-CELERY_DEFAULT_QUEUE = 'default'
-CELERY_DEFAULT_EXCHANGE_TYPE = 'topic'
-CELERY_DEFAULT_ROUTING_KEY = 'default'
-CELERY_IMPORTS = ('user.celery_tasks',)
-CELERYBEAT_SCHEDULE = {
-}
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 31104000}
 
 # 阿里云OSS存储
 OSS_KEY = 'LTAIUXXAywNcD8v3'
