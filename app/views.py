@@ -71,8 +71,9 @@ class SectionsViewSet(viewsets.ModelViewSet):
         instance.is_active = False
         instance.save()
 
-    def perform_update(self, serializer):
+    def update(self, request, *args, **kwargs):
         instance = self.get_object()
         note_obj = instance.notes
         note_obj.update_at = datetime.datetime.now()
         note_obj.save()
+        return super(SectionsViewSet, self).update(request)
