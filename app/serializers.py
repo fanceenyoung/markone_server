@@ -32,7 +32,7 @@ class NotesSerializer(serializers.ModelSerializer):
     sections = serializers.SerializerMethodField()
 
     def get_sections(self, instance):
-        sections = instance.sections.all().filter(is_active=True).order_by('-updated_at')
+        sections = instance.sections.all().filter(is_active=True, trash=False).order_by('-updated_at')
         return SimpleSectionsSerializer(sections, many=True).data
 
     class Meta:
