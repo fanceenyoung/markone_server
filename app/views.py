@@ -56,7 +56,7 @@ class NotesViewSet(viewsets.ModelViewSet):
 
 
 class SectionsViewSet(viewsets.ModelViewSet):
-    queryset = Sections.objects.filter(is_active=True).order_by('-highlight', '-updated_at')
+    queryset = Sections.objects.filter(is_active=True).order_by('created_at')
     serializer_class = SectionsSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ('remark', 'link', 'origin', )

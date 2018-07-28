@@ -128,5 +128,5 @@ SECTION_FOUR = 'If you haven’t installed our Chrome extension, please click he
 SECTION_FIVE = '如果您還沒有安裝拓展程序，請點擊這裡，或者在Chrome應用商店搜索“Mark One”。如果中國大陸的用戶在安装中遇到问题，請在幫助中心查看如何科學安裝，也歡迎微博微信搜索“Mark One馬一記”關注我們，了解科學學習方法，獲取更多新奇學習資料。'
 SECTION_SIX = 'Let us begin your new learning journey!'
 
-DEFAULT_SECTION_LIST = [SECTION_SIX, SECTION_FIVE, SECTION_FOUR, SECTION_THERE, SECTION_TWO, SECTION_ONE]
+DEFAULT_SECTION_LIST = [SECTION_ONE, SECTION_TWO, SECTION_THERE, SECTION_FOUR, SECTION_FIVE, SECTION_SIX]
 

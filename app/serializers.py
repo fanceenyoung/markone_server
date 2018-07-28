@@ -32,7 +32,7 @@ class NotesSerializer(serializers.ModelSerializer):
     sections = serializers.SerializerMethodField()
 
     def get_sections(self, instance):
-        sections = instance.sections.all().filter(is_active=True, trash=False).order_by('-updated_at')
+        sections = instance.sections.all().filter(is_active=True, trash=False).order_by('created_at')
         return SimpleSectionsSerializer(sections, many=True).data
 
     class Meta:
@@ -44,7 +44,7 @@ class NotesHightlightSerializer(serializers.ModelSerializer):
     sections = serializers.SerializerMethodField()
 
     def get_sections(self, instance):
-        sections = instance.sections.all().filter(is_active=True, highlight=True).order_by('-updated_at')
+        sections = instance.sections.all().filter(is_active=True, highlight=True, trash=False).order_by('created_at')
         return SimpleSectionsSerializer(sections, many=True).data
 
     class Meta:
@@ -56,7 +56,7 @@ class NotesTrashSerializer(serializers.ModelSerializer):
     sections = serializers.SerializerMethodField()
 
     def get_sections(self, instance):
-        sections = instance.sections.all().filter(is_active=True, trash=True).order_by('-updated_at')
+        sections = instance.sections.all().filter(is_active=True, highlight=False, trash=True).order_by('created_at')
         return SimpleSectionsSerializer(sections, many=True).data
 
     class Meta:
