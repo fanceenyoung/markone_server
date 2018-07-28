@@ -9,8 +9,8 @@ class SectionsSerializer(serializers.ModelSerializer):
     start_time = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, required=False)
     end_time = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, required=False)
     position = serializers.IntegerField(default=0, required=False)
-    image = serializers.CharField(default='', required=False)
-    remark = serializers.CharField(default='', required=False)
+    image = serializers.CharField(required=False)
+    remark = serializers.CharField(required=False)
 
     class Meta:
         model = Sections
