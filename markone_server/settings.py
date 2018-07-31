@@ -56,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'user.backends.MarkOneAuthBackend',
+    'users.backends.MarkOneAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

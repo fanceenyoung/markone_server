@@ -2,8 +2,8 @@
 from django.conf.urls import url, include
 
 from utils.func import SelfRouter, SimpleRouter
-from user.views import UserViewSet, forget_password, user_login, check_user, LogoutView
-from user.vertify_backend import VerifyViewSet
+from users.views import UserViewSet, forget_password, user_login, check_user, LogoutView
+from users.vertify_backend import VerifyViewSet
 
 
 self_router = SelfRouter()

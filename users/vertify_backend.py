@@ -12,7 +12,7 @@ from shaw.exception import SHException
 from shaw.schema import check_body_keys
 from shaw.web import empty_response
 
-from user.email_mixins import send_email_code
+from users.email_mixins import send_email_code
 from utils import exceptions
 
 LOG = logging.getLogger(__name__)

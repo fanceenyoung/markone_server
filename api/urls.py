@@ -5,6 +5,6 @@ from api.views import (LocalUrlView,)
 
 urlpatterns = [
     url(r'^local_url/$', LocalUrlView.as_view(), name='local_url'),
-    url(r'^users/', include('user.urls')),
+    url(r'^users/', include('users.urls')),
     url(r'^', include('app.urls')),
 ]

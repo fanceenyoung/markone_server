@@ -16,12 +16,12 @@ from rest_framework import mixins
 from django.views.decorators.csrf import csrf_exempt
 
 from shaw.schema import check_body_keys, check_params_keys
-from user.serializers import UserSerializer
+from users.serializers import UserSerializer
 from app.models import User
 from utils import const
 from rest_framework import views
-# from user.celery_tasks import sync_reset_password_task
-from user.email_mixins import send_email_change_password
+from users.celery_tasks import sync_reset_password_task
+from users.email_mixins import send_email_change_password
 
 
 LOG = logging.getLogger(__name__)
@@ -77,8 +77,8 @@ def forget_password(request):
             'password': password,
             'email': email,
         }
-        send_email_change_password(email=email, password=password)
-        # sync_reset_password_task.delay(**post_data)
+        # send_email_change_password(email=email, password=password)
+        sync_reset_password_task.delay(**post_data)
     msg_str = 'Reset password to email:[{}] succeeded!'.format(email)
     result = {
         'success': True,
