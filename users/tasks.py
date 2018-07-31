@@ -11,7 +11,7 @@ from app.models import Sections
 
 
 # 异步任务
-@shared_task
+@celery_app.task
 def sync_reset_password_task(**kwargs):
     password = kwargs.get('password')
     email = kwargs.get('email')
@@ -40,7 +40,6 @@ def periodic_fresh_trash(arg):
 @celery_app.task
 def hello_test(arg):
     print ">>> run hello_test"
-    print(arg)
 
 
 @celery_app.on_after_finalize.connect
