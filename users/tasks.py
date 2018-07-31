@@ -10,23 +10,23 @@ from markone_server.celery import celery_app
 from app.models import Sections
 
 
-# # 异步任务
-# @shared_task
-# def sync_reset_password_task(**kwargs):
-#     password = kwargs.get('password')
-#     email = kwargs.get('email')
-#     send_email_change_password(email=email, password=password)
-#     return 'sync_reset_password_task run success!'
+# 异步任务
+@shared_task
+def sync_reset_password_task(**kwargs):
+    password = kwargs.get('password')
+    email = kwargs.get('email')
+    send_email_change_password(email=email, password=password)
+    return 'sync_reset_password_task run success!'
 
 
-# @task_success.connect(sender=sync_reset_password_task)
-# def reset_password_task_success_handler(result=None, **kwargs):
-#     print '>>> reset_password_task_success_handler: run OK'
-#
-#
-# @task_failure.connect(sender=sync_reset_password_task)
-# def reset_password_task_failure_handler(**kwargs):
-#     print '>>> reset_password_task_failure_handler: run, fail'
+@task_success.connect(sender=sync_reset_password_task)
+def reset_password_task_success_handler(result=None, **kwargs):
+    print '>>> reset_password_task_success_handler: run OK'
+
+
+@task_failure.connect(sender=sync_reset_password_task)
+def reset_password_task_failure_handler(**kwargs):
+    print '>>> reset_password_task_failure_handler: run, fail'
 
 
 # 定时任务
