@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_redis',
+    # 'django_celery_beat',
     'markone_server',
     'app',
 ]
@@ -207,6 +208,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Shanghai'
 
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 31104000}
+
+# CELERY_ALWAYS_EAGER = False
 
 # 阿里云OSS存储
 OSS_KEY = 'LTAIUXXAywNcD8v3'

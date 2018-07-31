@@ -10,23 +10,23 @@ from markone_server.celery import celery_app
 from app.models import Sections
 
 
-# 异步任务
-@shared_task
-def sync_reset_password_task(**kwargs):
-    password = kwargs.get('password')
-    email = kwargs.get('email')
-    send_email_change_password(email=email, password=password)
-    return 'sync_reset_password_task run success!'
+# # 异步任务
+# @shared_task
+# def sync_reset_password_task(**kwargs):
+#     password = kwargs.get('password')
+#     email = kwargs.get('email')
+#     send_email_change_password(email=email, password=password)
+#     return 'sync_reset_password_task run success!'
 
 
-@task_success.connect(sender=sync_reset_password_task)
-def reset_password_task_success_handler(result=None, **kwargs):
-    print '>>> reset_password_task_success_handler: run OK'
-
-
-@task_failure.connect(sender=sync_reset_password_task)
-def reset_password_task_failure_handler(**kwargs):
-    print '>>> reset_password_task_failure_handler: run, fail'
+# @task_success.connect(sender=sync_reset_password_task)
+# def reset_password_task_success_handler(result=None, **kwargs):
+#     print '>>> reset_password_task_success_handler: run OK'
+#
+#
+# @task_failure.connect(sender=sync_reset_password_task)
+# def reset_password_task_failure_handler(**kwargs):
+#     print '>>> reset_password_task_failure_handler: run, fail'
 
 
 # 定时任务
@@ -37,8 +37,16 @@ def periodic_fresh_trash(arg):
     Sections.objects.filter(trash=True, updated_at__gte=time_end).update(is_active=False)
 
 
+@celery_app.task
+def hello_test(arg):
+    print ">>> run hello_test"
+    print(arg)
+
+
 @celery_app.on_after_finalize.connect
-def setup_users_periodic_tasks(sender, **kwargs):
+def setup_periodic_tasks(sender, **kwargs):
+    # sender.add_periodic_task(10.0, hello_test.s('what the fuck'), name='add every 10')
+    # sender.add_periodic_task(10.0, periodic_fresh_trash.s('fresh trash'), name='add every 10')
     # Executes every day morning at 3 a.m.
     sender.add_periodic_task(
         crontab(hour=3, minute=0,),
