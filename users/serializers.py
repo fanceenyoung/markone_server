@@ -3,6 +3,7 @@ import re
 
 from django.db import transaction
 from rest_framework import serializers
+from django.contrib.auth import login
 
 from app.models import User
 
@@ -41,8 +42,10 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data['country'] = country
         email = validated_data.get('email')
         if not User.objects.filter(email=email).exists():
-            return User.objects.create_user(**validated_data)
-        return User.objects.filter(email=email).first()
+            User.objects.create_user(**validated_data)
+        user = User.objects.filter(email=email).first()
+        login(self.context['request'], user, backend='django.contrib.auth.backends.ModelBackend')
+        return user
 
     @transaction.atomic
     def update(self, user, validated_data):
