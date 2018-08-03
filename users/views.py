@@ -55,7 +55,7 @@ def check_user(request):
     return Response({'result': result})
 
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @transaction.atomic
 @csrf_exempt
 def forget_password(request):
