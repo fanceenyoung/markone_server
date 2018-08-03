@@ -58,4 +58,8 @@ for each in const.DEFAULT_SECTION_LIST:
         se_dict = {'user': user, 'notes': note, 'remark': '', 'origin': const.DEFAULT_SITE, 'is_video': True, 'image': each}
     Sections.objects.create(**se_dict)
 
+import requests
+url = 'http://127.0.0.1:8000/api/users/upload_avatar'
+files = {'file': open('/Users/vfine/Desktop/news.png', 'rb')}
+r = requests.post(url, files=files)
 """

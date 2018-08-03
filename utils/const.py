@@ -27,8 +27,8 @@ EMAIL_CODE_SUBJECT = 'Code info from Markone'
 EMAIL_CODE_CONTENT = 'Code of this request is:'
 
 # 发送重置密码邮件头和内容
-EMAIL_PASSWORD_SUBJECT = 'Reset your password request'
-EMAIL_PASSWORD_CONTENT = 'Your new password is:'
+EMAIL_PASSWORD_SUBJECT = 'Forget your password? please check it out'
+EMAIL_PASSWORD_CONTENT = 'Click the link and reset the password: \n'
 
 
 # 账号中心-questions
@@ -130,3 +130,7 @@ SECTION_SIX = 'Let us begin your new learning journey!'
 
 DEFAULT_SECTION_LIST = [SECTION_ONE, SECTION_TWO, SECTION_THERE, SECTION_FOUR, SECTION_FIVE, SECTION_SIX]
 
+# 图片宽高大小限制
+AVATAR_WIDTH = 1080
+AVATAR_LENGTH = 1650
+AVATAR_MAX_SIZE = 600 * 1024

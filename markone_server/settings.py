@@ -127,7 +127,7 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSION': 'v1',
 }
 
-
+# DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -217,3 +217,6 @@ OSS_SECRET = 'RlrJI1W6wn679wz94DS5NXHZfi6lm7'
 END_POINT = 'oss-cn-beijing.aliyuncs.com'
 BUCKET_NAME = 'audionetwork'
 OSS_DIR = 'markone'
+
+WEBSITE_DOMAIN = 'http://www.markonenote.com'
+# WEBSITE_DOMAIN = 'http://127.0.0.1:8000'

@@ -4,24 +4,29 @@ from celery.signals import task_success, task_failure
 from celery.schedules import crontab
 import datetime
 from dateutil import relativedelta
+from django.db.models import F
 
-from users.email_mixins import send_email_change_password
 from markone_server.celery import celery_app
-from app.models import Sections
+from app.models import Sections, EmailCertification
+from users.email_mixins import send_email_change_password
 
 
 # 异步任务
 @celery_app.task
 def sync_reset_password_task(**kwargs):
-    password = kwargs.get('password')
     email = kwargs.get('email')
-    send_email_change_password(email=email, password=password)
-    return 'sync_reset_password_task run success!'
+    code = kwargs.get('code')
+    send_email_change_password(email=email, code=code)
+    print 'sync_reset_password_task run success!'
+    return {'email': email, 'code': code}
 
 
 @task_success.connect(sender=sync_reset_password_task)
 def reset_password_task_success_handler(result=None, **kwargs):
-    print '>>> reset_password_task_success_handler: run OK'
+    print 'reset_password_task_success_handler: run OK'
+    email = result.get('email')
+    code = result.get('code')
+    EmailCertification.objects.filter(code=code, email=email).update(count=F('count')+1, send=True)
 
 
 @task_failure.connect(sender=sync_reset_password_task)
@@ -53,8 +58,8 @@ def setup_periodic_tasks(sender, **kwargs):
     )
 
 '''
-celery -A markone_server worker -l info -P eventlet
-celery -A markone_server beat -l info
+celery -A markone_server worker --autoreload -l info -P eventlet
+celery -A markone_server beat --autoreload -l info
 celery -A markone_server flower
 celery -A markone_server flower --basic_auth=markonenote:markonenote
 '''

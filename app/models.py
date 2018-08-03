@@ -52,7 +52,7 @@ class User(AbstractBaseUser):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=128, default='')
     nickname = models.CharField(max_length=128, default='')
-    email = models.CharField(max_length=512, db_index=True, blank=True, default='')
+    email = models.CharField(max_length=512, db_index=True, unique=True)
     phone = models.CharField(max_length=32, db_index=True, blank=True, default='')
     type = models.CharField(max_length=16, choices=const.USER_TYPES, default=const.US_VISITOR)
     location = jsonfield.JSONField(blank=True)
@@ -105,6 +105,19 @@ class Sections(base_models.Object):
 
     def __str__(self):
         return 'Sections:{}'.format(self.uuid)
+
+
+@python_2_unicode_compatible
+class EmailCertification(base_models.Time):
+    EXPIRE_TIME = 3600 * 12
+    code = models.CharField(max_length=512)
+    email = models.CharField(max_length=512)
+    status = models.BooleanField(default=True)
+    send = models.BooleanField(default=False)
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return 'EmailCertification:{}{}'.format(self.code, self.email)
 
 
 @receiver(post_save, sender=User)
