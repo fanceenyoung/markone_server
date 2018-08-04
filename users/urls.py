@@ -3,7 +3,7 @@ from django.conf.urls import url, include
 
 from utils.func import SelfRouter, SimpleRouter
 from users.views import (UserViewSet, forget_password, user_login, check_user, LogoutView,
-                         UploadAvatarView, UploadImageView, send_code)
+                         UploadAvatarView, UploadImageView, send_code, google_login)
 from users.vertify_backend import VerifyViewSet
 
 
@@ -14,6 +14,7 @@ self_router.register('', UserViewSet, base_name='users')
 
 urlpatterns = [
     url(r'^login/?$', user_login, name='login'),
+    url(r'^google_login/?$', google_login, name='google_login'),
     url(r'^check_user/?$', check_user, name='check_user'),
     url(r'^send_code/?$', send_code, name='send_code'),
     url(r'^forget_password/?$', forget_password, name='forget_password'),

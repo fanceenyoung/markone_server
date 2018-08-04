@@ -33,7 +33,11 @@ class BaseUserManager(UserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         LOG.debug("Test password {}".format(password))
+        if password is None:
+            password = 'password'
         user.set_password(password)
+        if 'avatar' not in extra_fields:
+            user.avatar = generate_random_avatar()
         user.save(using=self._db)
         return user
 
@@ -57,10 +61,11 @@ class User(AbstractBaseUser):
     type = models.CharField(max_length=16, choices=const.USER_TYPES, default=const.US_VISITOR)
     location = jsonfield.JSONField(blank=True)
     country = models.CharField(max_length=32, blank=True, default='China')
-    avatar = models.CharField(max_length=256, blank=True, default=generate_random_avatar())
+    avatar = models.CharField(max_length=256, blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
+    token = models.CharField(max_length=512, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

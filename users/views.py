@@ -98,6 +98,19 @@ class UploadImageView(APIView):
 
 @api_view(['POST'])
 @csrf_exempt
+def google_login(request):
+    token = request.data.get('token')
+    if token and User.objects.filter(token=token).exists():
+        user = User.objects.filter(token=token).first()
+    else:
+        user = User.objects.create_user(**request.data)
+    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+    result = UserSerializer(instance=user).data
+    return Response(result, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@csrf_exempt
 def user_login(request):
     user = authenticate(request, **request.data)
     if user:
