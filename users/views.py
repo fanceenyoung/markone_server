@@ -121,90 +121,22 @@ def check_user(request):
 
 
 @csrf_exempt
-@api_view(['GET'])
-def certify_email(request):
-    params = request.query_params
-    code = params.get('code')
-    if not code or not EmailCertification.objects.filter(code=code).exists():
-        raise Http404
-
-    # check_params_keys(params, ['email', 'phone'], exclusion=True)
-    # result = False
-    # for field in ('phone', 'email'):
-    #     if params.get(field):
-    #         result |= User.objects.filter(**{field: params[field]}).exists()
-    cer_obj = EmailCertification.objects.get(code=code)
-    result = {'email': cer_obj.email}
-    return Response(result, status=200)
-
-
-class CertifyEmailView(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'certify_email.html'
-
-    def get(self, request, *args, **kwargs):
-        params = request.query_params
-        code = params.get('code')
-        if not code or not EmailCertification.objects.filter(code=code).exists():
-            result = {
-                'success': False,
-                'msg': 'Invalid code!',
-            }
-            return Response(result, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            cer_obj = EmailCertification.objects.filter(code=code).first()
-            return Response({'email': cer_obj.email}, status=200)
-
-
-@csrf_exempt
 @api_view(['POST'])
-def certify_password(request):
-    data = request.data
-    code = data.get('code')
-    first_password = data.get('first_password')
-    second_password = data.get('second_password')
-    if not code or first_password.upper() != second_password.upper():
-        msg_str = 'Invalid code or password does not match!'
-        result = {
-            'success': False,
-            'msg': msg_str,
-        }
-        return Response(result, status=status.HTTP_400_BAD_REQUEST)
-
-    certify_obj = EmailCertification.objects.get(code=code)
-    user = User.objects.filter(email=certify_obj.email).first()
-    user.set_password(second_password)
-    user.save()
-
-    login(request, user)
-
-    result = {
-        'success': True,
-        'msg': 'Reset password success!'
-    }
-    return Response(result, status=status.HTTP_200_OK)
-
-
-@api_view(['POST'])
-@transaction.atomic
-@csrf_exempt
-def forget_password(request):
-    data = request.data
-    email = data.get('email')
+def send_code(request):
+    email = request.data.get('email')
     if not email or not User.objects.filter(email=email).exists():
         result = {
             'success': False,
-            'msg': 'Invalid email address!',
+            'msg': const.EMAIL_ERROR_INFO,
         }
         return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
     if not EmailCertification.objects.filter(email=email).exists():
         uuid_str = uuid.uuid4().hex
         cer_obj = EmailCertification.objects.create(email=email, code=uuid_str)
-        msg_str = 'Reset password to email:[{}] succeeded!'.format(email)
         result = {
             'success': True,
-            'msg': msg_str,
+            'msg': const.EMAIL_SEND_CODE,
         }
 
         post_data = {
@@ -216,11 +148,11 @@ def forget_password(request):
     else:
         latest_obj = EmailCertification.objects.filter(email=email).latest('created_at')
         date_now = timezone.now()
-        delta = date_now - latest_obj.created_at
+        delta = date_now - latest_obj.updated_at
         if delta.seconds < EmailCertification.EXPIRE_TIME:
             result = {
                 'success': False,
-                'msg': 'Forget password forbidden in short time!',
+                'msg': const.EMAIL_SEND_FORBIDDEN,
             }
 
             return Response(result, status=status.HTTP_200_OK)
@@ -228,10 +160,9 @@ def forget_password(request):
             uuid_str = uuid.uuid4().hex
             latest_obj.code = uuid_str
             latest_obj.save()
-            msg_str = 'Reset password to email:[{}] succeeded!'.format(email)
             result = {
                 'success': True,
-                'msg': msg_str,
+                'msg': const.EMAIL_SEND_CODE,
             }
 
             post_data = {
@@ -239,6 +170,36 @@ def forget_password(request):
                 'code': str(uuid_str)
             }
             sync_reset_password_task.delay(**post_data)
+        return Response(result, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@csrf_exempt
+def forget_password(request):
+    email = request.data.get('email')
+    code = request.data.get('code')
+    password = request.data.get('password')
+    if not email or not User.objects.filter(email=email).exists():
+        result = {
+            'success': False,
+            'msg': const.EMAIL_ERROR_INFO,
+        }
+        return Response(result, status=status.HTTP_400_BAD_REQUEST)
+    elif not code or not EmailCertification.objects.filter(email=email, code=code).exists():
+        result = {
+            'success': False,
+            'msg': const.EMAIL_CODE_ERROR,
+        }
+        return Response(result, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        user = User.objects.filter(email=email).first()
+        user.set_password(password)
+        user.save()
+        login(request, user)
+        result = {
+            'success': True,
+            'msg': 'Congratulations! You have successfully reset your password:)'
+        }
         return Response(result, status=status.HTTP_200_OK)
 
 

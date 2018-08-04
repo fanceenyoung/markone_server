@@ -28,8 +28,13 @@ EMAIL_CODE_CONTENT = 'Code of this request is:'
 
 # 发送重置密码邮件头和内容
 EMAIL_PASSWORD_SUBJECT = 'Forget your password? please check it out'
-EMAIL_PASSWORD_CONTENT = 'Click the link and reset the password: \n'
+EMAIL_PASSWORD_CONTENT = 'Your request for changing your account info has been received, please ensure the request is on your will.\n ' \
+                         'If it is, please copy and paste the code below to reset your account. You will not receive a new code in 12 hours.\n'
 
+EMAIL_ERROR_INFO = 'This email has not signed in.'
+EMAIL_CODE_ERROR = 'Email and code not match.'
+EMAIL_SEND_CODE = 'An email with a code and password reset instructions has been sent to your email address.'
+EMAIL_SEND_FORBIDDEN = 'Forget password request forbidden in short time.',
 
 # 账号中心-questions
 QUESTIONS = [

@@ -30,8 +30,8 @@ def send_email_code(email, code=None):
 
 def send_email_change_password(email, code):
     subject = const.EMAIL_PASSWORD_SUBJECT
-    link_url = settings.WEBSITE_DOMAIN + '/api/users/certify_email/?code=' + code
-    content = const.EMAIL_PASSWORD_CONTENT + link_url
+    code_str = 'Code is: {}'.format(code)
+    content = const.EMAIL_PASSWORD_CONTENT + code_str
     base_email_send(email=email, subject=subject, content=content)
 
 
