@@ -209,7 +209,7 @@ def forget_password(request):
         user = User.objects.filter(email=email).first()
         user.set_password(password)
         user.save()
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         result = {
             'success': True,
             'msg': 'Congratulations! You have successfully reset your password:)'
